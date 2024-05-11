@@ -37,15 +37,30 @@ class Player(GameSprite):
 
 racket1 = Player('racket.png', 20,200,39,136,6)
 racket2 = Player('racket.png',640,200,39,136,6)
+ball = GameSprite('tenis_ball.png',350,250,50,50,7)
 game = True
+finish = False
+speed_x = 5
+speed_y = 5
 while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-    window.blit(background,(0,0))
-    racket1.reset()
-    racket2.reset()
-    racket1.update_l()
-    racket2.update_r()
-    clock.tick(FPS)
-    display.update()
+    if finish != True:
+        window.blit(background,(0,0))
+        racket1.reset()
+        racket2.reset()
+        ball.reset()
+        ball.update()
+        racket1.update_l()
+        racket2.update_r()
+        clock.tick(FPS)
+        display.update()
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y
+        if ball.rect.y > win_height-50 or ball.rect.y < 0:
+            speed_y *= -1
+        if sprite.collide_rect(racket1, ball) or sprite.collide_rect(racket2, ball):
+            speed_x *= -1
+        if ball.rect.x > win_width-50  or ball.rect.x < 0:
+            finish = True
